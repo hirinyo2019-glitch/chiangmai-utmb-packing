@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>チェンマイ持ち物リスト</title>
+<meta name="description" content="Chiangmai Thailand by UTMB 2026 大和練 遠征の持ち物チェックリスト">
+<meta name="theme-color" content="#1f5a46">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{
+  --bg:#f5f1e8; --card:#fffdf8; --ink:#22201c; --sub:#6d675e; --line:#e3dccd;
+  --accent:#1f5a46; --accent-soft:#dcebe3; --gold:#b8862b; --gold-soft:#f5e7c8;
+  --done:#9a958b; --new:#c4502d;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181a; --card:#1f2224; --ink:#ece8df; --sub:#a39d92; --line:#33373a;
+    --accent:#6fc39e; --accent-soft:#1f3a2f; --gold:#e0b357; --gold-soft:#3a3020;
+    --done:#6f6b64; --new:#f08a62;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181a; --card:#1f2224; --ink:#ece8df; --sub:#a39d92; --line:#33373a;
+  --accent:#6fc39e; --accent-soft:#1f3a2f; --gold:#e0b357; --gold-soft:#3a3020;
+  --done:#6f6b64; --new:#f08a62;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;
+  font-size:16px;line-height:1.55}
+a{color:var(--accent);word-break:break-all}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 80px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;border-bottom:1px solid var(--line)}
+h1{font-size:20px;margin:0;letter-spacing:.02em}
+.sub{color:var(--sub);font-size:13px}
+.progress{display:flex;align-items:center;gap:10px;margin-top:8px}
+.bar{flex:1;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.count{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px;min-width:64px;text-align:right}
+.controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;
+  padding:6px 12px;font-size:13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{color:#10261d}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#10261d}}
+.label{font-size:12px;color:var(--sub);width:100%;margin-top:4px}
+.banner{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:var(--gold-soft);font-size:14px}
+.banner button{margin-left:6px}
+.intro{color:var(--sub);font-size:14px;margin:14px 0 4px;white-space:pre-line}
+section{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+details > summary{list-style:none;cursor:pointer;padding:12px 14px;display:flex;align-items:center;gap:10px;font-weight:700}
+details > summary::-webkit-details-marker{display:none}
+details[open] > summary .chev{transform:rotate(90deg)}
+.chev{transition:transform .2s;color:var(--sub);font-size:12px}
+.stitle{flex:1}
+.scount{font-size:13px;color:var(--sub);font-weight:600;font-variant-numeric:tabular-nums}
+.scount.full{color:var(--accent)}
+.group{padding:4px 14px 2px;font-size:13px;font-weight:700;color:var(--gold);border-top:1px solid var(--line);margin-top:4px;padding-top:10px}
+.race{padding:6px 14px 0;font-size:13px;font-weight:600;color:var(--sub)}
+.note{margin:6px 14px;padding:8px 10px;font-size:13px;background:var(--accent-soft);border-radius:8px;white-space:pre-line}
+ul{list-style:none;margin:0;padding:0 0 6px}
+li{border-top:1px solid var(--line)}
+li:first-child{border-top:none}
+label.item{display:flex;gap:12px;padding:11px 14px;cursor:pointer;align-items:flex-start}
+label.item input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--accent);flex:none}
+.itext{flex:1;min-width:0}
+.ttl{display:block}
+.det{display:block;font-size:13px;color:var(--sub);margin-top:2px}
+li.done .ttl{color:var(--done);text-decoration:line-through}
+.newb{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:var(--new);border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:2px}
+.hide-done li.done{display:none}
+.footer{margin-top:22px;color:var(--sub);font-size:13px;text-align:center}
+.tools{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.tools button{background:none;border:1px solid var(--line);color:var(--sub);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
+.err{padding:14px;color:var(--new)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1 id="title">チェンマイ持ち物リスト</h1>
+    <div class="sub">Chiangmai Thailand by UTMB 2026・大和練</div>
+    <div class="progress"><div class="bar"><i id="bar"></i></div><div class="count" id="count">– / –</div></div>
+    <div class="controls" id="races"></div>
+    <div class="controls">
+      <button class="chip" id="hideDone" aria-pressed="false">準備済みを隠す</button>
+    </div>
+  </header>
+  <div id="banners"></div>
+  <div class="intro" id="intro"></div>
+  <div id="list"><div class="sub" style="padding:20px 0">読み込み中…</div></div>
+  <div class="footer">
+    <div id="footer"></div>
+    <div id="updated" style="margin-top:6px"></div>
+    <div class="tools">
+      <button id="theme">表示：自動</button>
+      <button id="reset">チェックを全部外す</button>
+    </div>
+    <div style="margin-top:10px">チェックはこのスマホのブラウザに保存されます（他の人には見えません）</div>
+  </div>
+</div>
+<script>
+const LS = "cmutmb-packing-v1";
+let state = load();
+function load(){
+  try{ return Object.assign({checked:{}, seen:null, race:"", hideDone:false, theme:""}, JSON.parse(localStorage.getItem(LS)||"{}")); }
+  catch(e){ return {checked:{}, seen:null, race:"", hideDone:false, theme:""}; }
+}
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} }
+
+// LINE のアプリ内ブラウザは保存が消えることがあるので外部ブラウザを案内
+const inLine = /\bLine\//i.test(navigator.userAgent);
+
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const linkify = s => esc(s).replace(/https?:\/\/[^\s　]+/g, u => `<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
+const trimIndent = s => s.replace(/^[\s　]+/, "");
+
+// ノート5（LINE ノート形式の txt）を構造に変換
+function parse(txt){
+  const lines = txt.replace(/^﻿/, "").split(/\r?\n/);
+  const doc = {title:"", intro:[], sections:[], footer:[]};
+  let sec = null, group = "", races = null, lastItem = null, keyCount = {};
+  for(const raw of lines){
+    const line = raw.replace(/\s+$/, "");
+    if(!line.trim()){ lastItem = null; continue; }
+    if(/^━+$/.test(line.trim())) continue;
+    if(!doc.title && /^【.*】/.test(line) && !sec){ doc.title = line.replace(/^【[^】]*】\s*/, "").trim() || line; continue; }
+    let m;
+    if((m = line.match(/^■\s*(.+)$/))){
+      sec = {title:m[1].trim(), blocks:[]}; doc.sections.push(sec);
+      group = ""; races = null; lastItem = null; continue;
+    }
+    if(!sec){ doc.intro.push(line); continue; }
+    if((m = line.match(/^【(.+)】$/))){
+      group = m[1]; races = null; lastItem = null;
+      sec.blocks.push({type:"group", text:group}); continue;
+    }
+    if((m = line.match(/^・(.+)$/)) && /種目/.test(group)){
+      races = m[1].split(/[／\/]/).map(s => s.trim()).filter(Boolean);
+      sec.blocks.push({type:"race", races}); lastItem = null; continue;
+    }
+    if((m = line.match(/^□\s*(.+)$/))){
+      const text = m[1].trim();
+      const base = sec.title.charAt(0) + "|" + (races ? races.join("/") + "|" : "") + text.split(/[（(]/)[0].trim();
+      keyCount[base] = (keyCount[base]||0) + 1;
+      const key = keyCount[base] > 1 ? base + "#" + keyCount[base] : base;
+      lastItem = {type:"item", key, text, details:[], races};
+      sec.blocks.push(lastItem); continue;
+    }
+    if(lastItem && /^[\s　]/.test(line)){ lastItem.details.push(trimIndent(line)); continue; }
+    if(/^[\s　]*※/.test(line)){
+      const prev = sec.blocks[sec.blocks.length-1];
+      if(prev && prev.type === "note") prev.text += "\n" + trimIndent(line);
+      else sec.blocks.push({type:"note", text:trimIndent(line)});
+      lastItem = null; continue;
+    }
+    // セクション外の文（最後の締めの一言など）
+    doc.footer.push(line); lastItem = null;
+  }
+  // 最後のセクションの後ろの文は footer へ（上で処理済み）
+  return doc;
+}
+
+let DOC = null, NEWKEYS = new Set();
+
+// 「アンドロイド」の次の行が URL なら、ラベルをリンクにして長い URL を隠す
+const isUrl = s => /^https?:\/\/\S+$/.test(s);
+function details(ds){
+  let html = "";
+  for(let i = 0; i < ds.length; i++){
+    const d = ds[i], next = ds[i+1];
+    if(!isUrl(d) && next && isUrl(next) && d.length <= 20){
+      html += `<span class="det"><a href="${esc(next)}" target="_blank" rel="noopener">${esc(d)}</a></span>`; i++;
+    }else if(isUrl(d)){
+      html += `<span class="det"><a href="${esc(d)}" target="_blank" rel="noopener">${esc(d.replace(/^https?:\/\/(www\.)?/, "").split("/")[0])}</a></span>`;
+    }else html += `<span class="det">${linkify(d)}</span>`;
+  }
+  return html;
+}
+
+function allRaces(){
+  const set = [];
+  DOC.sections.forEach(s => s.blocks.forEach(b => { if(b.type==="race") b.races.forEach(r => { if(!set.includes(r)) set.push(r); }); }));
+  return set;
+}
+const visibleFor = it => !state.race || !it.races || it.races.includes(state.race);
+
+function render(){
+  document.getElementById("title").textContent = "チェンマイ持ち物リスト";
+  document.getElementById("intro").textContent = DOC.intro.join("\n");
+  document.getElementById("footer").textContent = DOC.footer.join("\n");
+
+  // 種目の選択
+  const rs = allRaces();
+  const rc = document.getElementById("races");
+  rc.innerHTML = `<div class="label">自分の種目（必携品の表示が絞られます）</div>` +
+    [["","すべて"], ...rs.map(r => [r, r])].map(([v,l]) =>
+      `<button class="chip" data-race="${esc(v)}" aria-pressed="${state.race===v}">${esc(l)}</button>`).join("");
+  rc.querySelectorAll("[data-race]").forEach(b => b.onclick = () => { state.race = b.dataset.race; save(); render(); });
+
+  const listEl = document.getElementById("list");
+  listEl.className = state.hideDone ? "hide-done" : "";
+  const openState = JSON.parse(sessionStorageGet("open") || "{}");
+  listEl.innerHTML = DOC.sections.map((s, si) => {
+    let html = "", open = false, inList = false, raceVisible = true;
+    const closeList = () => { if(inList){ html += "</ul>"; inList = false; } };
+    s.blocks.forEach(b => {
+      if(b.type === "group"){ closeList(); raceVisible = true; html += `<div class="group">${esc(b.text)}</div>`; }
+      else if(b.type === "race"){ closeList(); raceVisible = !state.race || b.races.includes(state.race);
+        if(raceVisible) html += `<div class="race">${esc(b.races.join(" ／ "))}</div>`; }
+      else if(b.type === "note"){ closeList(); html += `<div class="note">${linkify(b.text)}</div>`; }
+      else if(b.type === "item"){
+        if(!visibleFor(b)) return;
+        if(!inList){ html += "<ul>"; inList = true; }
+        const done = !!state.checked[b.key];
+        const isNew = NEWKEYS.has(b.key) && !done;
+        html += `<li class="${done?"done":""}"><label class="item"><input type="checkbox" data-key="${esc(b.key)}" ${done?"checked":""}>` +
+          `<span class="itext"><span class="ttl">${linkify(b.text)}${isNew?'<span class="newb">NEW</span>':""}</span>` +
+          details(b.details) + `</span></label></li>`;
+      }
+    });
+    closeList();
+    const items = s.blocks.filter(b => b.type==="item" && visibleFor(b));
+    const n = items.filter(b => state.checked[b.key]).length;
+    open = openState[si] !== undefined ? openState[si] : n < items.length;
+    return `<details class="sec" data-si="${si}" ${open?"open":""}><summary><span class="chev">▶</span>` +
+      `<span class="stitle">${esc(s.title)}</span><span class="scount ${n===items.length?"full":""}">${n} / ${items.length}</span></summary>${html}</details>`;
+  }).map(h => `<section>${h}</section>`).join("");
+
+  listEl.querySelectorAll("input[data-key]").forEach(cb => cb.onchange = () => {
+    if(cb.checked) state.checked[cb.dataset.key] = Date.now(); else delete state.checked[cb.dataset.key];
+    save();
+    cb.closest("li").classList.toggle("done", cb.checked);
+    const nb = cb.closest("li").querySelector(".newb"); if(nb && cb.checked) nb.remove();
+    updateCounts();
+  });
+  listEl.querySelectorAll("details.sec").forEach(d => d.ontoggle = () => {
+    const o = JSON.parse(sessionStorageGet("open") || "{}"); o[d.dataset.si] = d.open; sessionStorageSet("open", JSON.stringify(o));
+  });
+  document.getElementById("hideDone").setAttribute("aria-pressed", state.hideDone);
+  updateCounts();
+}
+
+function updateCounts(){
+  let all = 0, done = 0;
+  DOC.sections.forEach((s, si) => {
+    const items = s.blocks.filter(b => b.type==="item" && visibleFor(b));
+    const n = items.filter(b => state.checked[b.key]).length;
+    all += items.length; done += n;
+    const el = document.querySelector(`details[data-si="${si}"] .scount`);
+    if(el){ el.textContent = `${n} / ${items.length}`; el.classList.toggle("full", n===items.length); }
+  });
+  document.getElementById("count").textContent = `${done} / ${all}`;
+  document.getElementById("bar").style.width = all ? (done/all*100) + "%" : "0";
+}
+
+function sessionStorageGet(k){ try{ return sessionStorage.getItem("cmutmb-"+k); }catch(e){ return null; } }
+function sessionStorageSet(k,v){ try{ sessionStorage.setItem("cmutmb-"+k, v); }catch(e){} }
+
+function banners(added, removedChecked){
+  const out = [];
+  if(inLine) out.push(`LINE の中で開いています。チェックが消えることがあるので、右上のメニューから<b>「他のアプリで開く」</b>（Chrome / Safari）で開き、ホーム画面に追加するのがおすすめです。`);
+  if(added > 0) out.push(`リストが更新されました。新しい項目が <b>${added}</b> 件あります（NEW 印）。<button class="chip" id="ackNew">確認した</button>`);
+  if(removedChecked > 0) out.push(`リストの書き換えで、チェック済みだった項目のうち ${removedChecked} 件の名前が変わりました。必要ならもう一度チェックしてください。`);
+  const el = document.getElementById("banners");
+  el.innerHTML = out.map(t => `<div class="banner">${t}</div>`).join("");
+  const ack = document.getElementById("ackNew");
+  if(ack) ack.onclick = () => { state.seen = currentKeys(); save(); NEWKEYS = new Set(); banners(0, 0); render(); };
+}
+const currentKeys = () => DOC.sections.flatMap(s => s.blocks.filter(b => b.type==="item").map(b => b.key));
+
+async function start(){
+  let txt;
+  try{
+    const res = await fetch("list.txt?t=" + Date.now(), {cache:"no-store"});
+    if(!res.ok) throw new Error(res.status);
+    txt = await res.text();
+    const lm = res.headers.get("last-modified");
+    if(lm) document.getElementById("updated").textContent = "リスト更新: " + new Date(lm).toLocaleString("ja-JP", {month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit"});
+  }catch(e){
+    const hit = await (window.caches ? caches.match("list.txt", {ignoreSearch:true}) : null);
+    if(hit){ txt = await hit.text(); document.getElementById("updated").textContent = "オフライン表示（前回読み込んだリスト）"; }
+    else { document.getElementById("list").innerHTML = `<div class="err">リストを読み込めませんでした。電波のある所でもう一度開いてください。</div>`; return; }
+  }
+  DOC = parse(txt);
+  const keys = currentKeys();
+  let added = 0, removed = 0;
+  if(state.seen){
+    const seen = new Set(state.seen);
+    NEWKEYS = new Set(keys.filter(k => !seen.has(k)));
+    added = NEWKEYS.size;
+    const now = new Set(keys);
+    removed = Object.keys(state.checked).filter(k => !now.has(k)).length;
+    // 消えた項目のチェックは片付ける
+    Object.keys(state.checked).forEach(k => { if(!now.has(k)) delete state.checked[k]; });
+  }
+  if(!state.seen || added === 0) state.seen = keys;
+  save();
+  banners(added, removed);
+  render();
+}
+
+document.getElementById("hideDone").onclick = () => { state.hideDone = !state.hideDone; save(); render(); };
+document.getElementById("reset").onclick = () => {
+  if(confirm("チェックを全部外しますか？")){ state.checked = {}; save(); render(); }
+};
+const themeBtn = document.getElementById("theme");
+function applyTheme(){
+  if(state.theme) document.documentElement.dataset.theme = state.theme; else delete document.documentElement.dataset.theme;
+  themeBtn.textContent = "表示：" + ({"":"自動", light:"ライト", dark:"ダーク"})[state.theme || ""];
+}
+themeBtn.onclick = () => { state.theme = ({"":"light", light:"dark", dark:""})[state.theme || ""]; save(); applyTheme(); };
+applyTheme();
+
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+start();
+</script>
+</body>
+</html>
