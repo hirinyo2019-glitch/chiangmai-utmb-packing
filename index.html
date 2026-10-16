@@ -77,6 +77,11 @@ li.done .ttl{color:var(--done);text-decoration:line-through}
 .tools{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
 .tools button{background:none;border:1px solid var(--line);color:var(--sub);border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
 .err{padding:14px;color:var(--new)}
+.backup{margin:0 0 14px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;text-align:left}
+.bk-title{font-weight:700;color:var(--ink);font-size:14px}
+.bk-sub{font-size:12px;color:var(--sub);margin-top:4px}
+.bk-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
 </style>
 </head>
 <body>
@@ -96,6 +101,17 @@ li.done .ttl{color:var(--done);text-decoration:line-through}
   <div class="footer">
     <div id="footer"></div>
     <div id="updated" style="margin-top:6px"></div>
+    <div class="backup">
+      <div class="bk-title">バックアップ</div>
+      <div class="bk-sub">チェックは自動で保存されます。機種変更やブラウザのデータ削除に備えて、ときどきバックアップしておくと安心です。</div>
+      <div class="bk-btns">
+        <button class="chip" id="bkShare">LINE などに送る</button>
+        <button class="chip" id="bkSave">ファイルに保存</button>
+        <button class="chip" id="bkRestore">バックアップから復元</button>
+        <input type="file" id="bkFile" accept=".txt,.json,text/plain,application/json" hidden>
+      </div>
+      <div class="bk-sub" id="bkLast"></div>
+    </div>
     <div class="tools">
       <button id="theme">表示：自動</button>
       <button id="reset">チェックを全部外す</button>
@@ -256,6 +272,7 @@ function updateCounts(){
   });
   document.getElementById("count").textContent = `${done} / ${all}`;
   document.getElementById("bar").style.width = all ? (done/all*100) + "%" : "0";
+  showLastBackup();
 }
 
 function sessionStorageGet(k){ try{ return sessionStorage.getItem("cmutmb-"+k); }catch(e){ return null; } }
@@ -315,6 +332,61 @@ function applyTheme(){
 }
 themeBtn.onclick = () => { state.theme = ({"":"light", light:"dark", dark:""})[state.theme || ""]; save(); applyTheme(); };
 applyTheme();
+
+// ---- バックアップ（ファイル保存・共有・復元） ----
+// LINE や Android の共有で受け付けられるよう、中身は JSON だが拡張子は .txt にする
+function toast(msg){
+  const t = document.createElement("div"); t.className = "toast"; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 3500);
+}
+function backupFile(){
+  const d = new Date(), p = n => String(n).padStart(2, "0");
+  const data = {app:"cmutmb-packing", v:1, savedAt:d.toISOString(), checked:state.checked, race:state.race, hideDone:state.hideDone};
+  const name = `チェンマイ持ち物_バックアップ_${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}.txt`;
+  return new File([JSON.stringify(data)], name, {type:"text/plain"});
+}
+function markBackup(){ state.lastBackup = Date.now(); save(); showLastBackup(); }
+function showLastBackup(){
+  const n = Object.keys(state.checked).length;
+  document.getElementById("bkLast").textContent = state.lastBackup
+    ? "前回のバックアップ: " + new Date(state.lastBackup).toLocaleString("ja-JP", {month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit"})
+    : (n ? "まだバックアップしていません" : "");
+}
+function download(file){
+  const a = document.createElement("a"); a.href = URL.createObjectURL(file); a.download = file.name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+document.getElementById("bkShare").onclick = async () => {
+  const file = backupFile();
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{
+      await navigator.share({files:[file], title:"チェンマイ持ち物リストのバックアップ"});
+      markBackup(); toast("送りました。LINE なら Keep メモに送ると後で取り出せます");
+    }catch(e){ if(e.name !== "AbortError") toast("送れませんでした。「ファイルに保存」を使ってください"); }
+  }else{
+    download(file); markBackup(); toast("このブラウザは共有に対応していないため、ファイルに保存しました");
+  }
+};
+document.getElementById("bkSave").onclick = () => { download(backupFile()); markBackup(); toast("ダウンロードに保存しました"); };
+document.getElementById("bkRestore").onclick = () => document.getElementById("bkFile").click();
+document.getElementById("bkFile").onchange = async e => {
+  const f = e.target.files[0]; e.target.value = "";
+  if(!f) return;
+  let data;
+  try{ data = JSON.parse(await f.text()); }catch(err){ data = null; }
+  if(!data || data.app !== "cmutmb-packing" || typeof data.checked !== "object"){ alert("このアプリのバックアップファイルではないようです。"); return; }
+  const keys = DOC ? new Set(currentKeys()) : null;
+  const all = Object.keys(data.checked);
+  const ok = keys ? all.filter(k => keys.has(k)) : all;
+  const when = data.savedAt ? new Date(data.savedAt).toLocaleString("ja-JP", {month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit"}) : "日時不明";
+  if(!confirm(`${when} のバックアップから ${ok.length} 件のチェックを復元します。\n今のチェックは置き換えられます。よろしいですか？`)) return;
+  state.checked = {}; ok.forEach(k => state.checked[k] = data.checked[k]);
+  if(typeof data.race === "string") state.race = data.race;
+  if(typeof data.hideDone === "boolean") state.hideDone = data.hideDone;
+  save(); if(DOC) render(); showLastBackup();
+  toast(`${ok.length} 件を復元しました` + (all.length > ok.length ? `（リストから消えた ${all.length - ok.length} 件は除外）` : ""));
+};
+showLastBackup();
 
 if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 start();
