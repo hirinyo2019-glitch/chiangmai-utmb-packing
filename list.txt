@@ -17,6 +17,10 @@
 □ Grab アプリのインストール（空港⇔ホテル・会場への移動）
 　アンドロイド
 　https://play.google.com/store/apps/details?id=com.grabtaxi.passenger
+　オーキッドホテルへの行き方
+　https://hirinyo2019-glitch.github.io/chiangmai-utmb-packing/hotel-route.jpg
+　Grabアプリの使い方
+　https://hirinyo2019-glitch.github.io/chiangmai-utmb-packing/grab-howto.jpg
 　Apple
 　https://apps.apple.com/jp/app/grab-%E3%82%BF%E3%82%AF%E3%82%B7%E3%83%BC%E3%81%A8%E3%83%95%E3%83%BC%E3%83%89%E3%83%87%E3%83%AA%E3%83%90%E3%83%AA%E3%83%BC/id647268330
 □ レースパス（ノート4、スクショ）

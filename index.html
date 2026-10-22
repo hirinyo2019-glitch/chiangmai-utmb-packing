@@ -38,6 +38,7 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;
 h1{font-size:20px;margin:0;letter-spacing:.02em}
 .titlerow{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px}
 .guide-link{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--accent);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.imglink{margin-left:14px;white-space:nowrap}
 .viewer{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.88);overflow:auto;-webkit-overflow-scrolling:touch}
 .viewer img{display:block;width:100%;max-width:720px;height:auto;margin:0 auto;padding:52px 0 24px}
 .viewer button{position:fixed;top:10px;right:12px;z-index:31;background:#fff;color:#222;border:none;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;cursor:pointer}
@@ -193,12 +194,19 @@ let DOC = null, NEWKEYS = new Set();
 
 // 「アンドロイド」の次の行が URL なら、ラベルをリンクにして長い URL を隠す
 const isUrl = s => /^https?:\/\/\S+$/.test(s);
+// このアプリに置いたイラスト（.jpg）へのリンクは、直前のリンクの横に並べてアプリ内で全画面表示する
+const SITE = "https://hirinyo2019-glitch.github.io/chiangmai-utmb-packing/";
+const isGuideImg = u => u.startsWith(SITE) && /\.jpg$/i.test(u);
 function details(ds){
   let html = "";
   for(let i = 0; i < ds.length; i++){
     const d = ds[i], next = ds[i+1];
     if(!isUrl(d) && next && isUrl(next) && d.length <= 20){
-      html += `<span class="det"><a href="${esc(next)}" target="_blank" rel="noopener">${esc(d)}</a></span>`; i++;
+      if(isGuideImg(next) && html.endsWith("</a></span>")){
+        html = html.slice(0, -"</span>".length) +
+          `<a class="imglink" href="${esc(next.slice(SITE.length))}" data-img>${esc(d)}</a></span>`;
+      }else html += `<span class="det"><a href="${esc(next)}" target="_blank" rel="noopener">${esc(d)}</a></span>`;
+      i++;
     }else if(isUrl(d)){
       html += `<span class="det"><a href="${esc(d)}" target="_blank" rel="noopener">${esc(d.replace(/^https?:\/\/(www\.)?/, "").split("/")[0])}</a></span>`;
     }else html += `<span class="det">${linkify(d)}</span>`;
@@ -398,14 +406,22 @@ showLastBackup();
 
 // ---- チェンマイ初めてガイド（イラストを全画面で表示、閉じるボタン・背景タップ・戻るで閉じる） ----
 function closeGuide(){ const v = document.querySelector(".viewer"); if(v){ v.remove(); document.body.style.overflow = ""; } }
-document.getElementById("guideLink").onclick = e => {
-  e.preventDefault();
+function openGuide(src, alt){
+  closeGuide();
   const v = document.createElement("div"); v.className = "viewer";
-  v.innerHTML = `<button type="button">閉じる ✕</button><img src="guide.jpg" alt="チェンマイ はじめてガイド（Grab での移動時間めやす）">`;
+  v.innerHTML = `<button type="button">閉じる ✕</button><img src="${esc(src)}" alt="${esc(alt)}">`;
   v.onclick = ev => { if(ev.target !== v.querySelector("img")) history.back(); };
   document.body.appendChild(v); document.body.style.overflow = "hidden";
   history.pushState({guide:1}, "");
+}
+document.getElementById("guideLink").onclick = e => {
+  e.preventDefault(); openGuide("guide.jpg", "チェンマイ はじめてガイド（Grab での移動時間めやす）");
 };
+// リスト内のイラストリンク（チェックボックスが切り替わらないよう label の中で止める）
+document.getElementById("list").addEventListener("click", e => {
+  const a = e.target.closest("a[data-img]");
+  if(a){ e.preventDefault(); e.stopPropagation(); openGuide(a.getAttribute("href"), a.textContent); }
+});
 window.addEventListener("popstate", closeGuide);
 
 if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
