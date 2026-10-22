@@ -36,6 +36,11 @@ a{color:var(--accent);word-break:break-all}
 .wrap{max-width:720px;margin:0 auto;padding:0 16px 80px}
 header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;border-bottom:1px solid var(--line)}
 h1{font-size:20px;margin:0;letter-spacing:.02em}
+.titlerow{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px}
+.guide-link{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--accent);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.viewer{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.88);overflow:auto;-webkit-overflow-scrolling:touch}
+.viewer img{display:block;width:100%;max-width:720px;height:auto;margin:0 auto;padding:52px 0 24px}
+.viewer button{position:fixed;top:10px;right:12px;z-index:31;background:#fff;color:#222;border:none;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;cursor:pointer}
 .sub{color:var(--sub);font-size:13px}
 .progress{display:flex;align-items:center;gap:10px;margin-top:8px}
 .bar{flex:1;height:10px;background:var(--line);border-radius:6px;overflow:hidden}
@@ -87,7 +92,10 @@ li.done .ttl{color:var(--done);text-decoration:line-through}
 <body>
 <div class="wrap">
   <header>
-    <h1 id="title">チェンマイ持ち物リスト</h1>
+    <div class="titlerow">
+      <h1 id="title">チェンマイ持ち物リスト</h1>
+      <a class="guide-link" id="guideLink" href="guide.jpg">チェンマイ初めてガイド</a>
+    </div>
     <div class="sub">Chiangmai Thailand by UTMB 2026・大和練</div>
     <div class="progress"><div class="bar"><i id="bar"></i></div><div class="count" id="count">– / –</div></div>
     <div class="controls" id="races"></div>
@@ -387,6 +395,18 @@ document.getElementById("bkFile").onchange = async e => {
   toast(`${ok.length} 件を復元しました` + (all.length > ok.length ? `（リストから消えた ${all.length - ok.length} 件は除外）` : ""));
 };
 showLastBackup();
+
+// ---- チェンマイ初めてガイド（イラストを全画面で表示、閉じるボタン・背景タップ・戻るで閉じる） ----
+function closeGuide(){ const v = document.querySelector(".viewer"); if(v){ v.remove(); document.body.style.overflow = ""; } }
+document.getElementById("guideLink").onclick = e => {
+  e.preventDefault();
+  const v = document.createElement("div"); v.className = "viewer";
+  v.innerHTML = `<button type="button">閉じる ✕</button><img src="guide.jpg" alt="チェンマイ はじめてガイド（Grab での移動時間めやす）">`;
+  v.onclick = ev => { if(ev.target !== v.querySelector("img")) history.back(); };
+  document.body.appendChild(v); document.body.style.overflow = "hidden";
+  history.pushState({guide:1}, "");
+};
+window.addEventListener("popstate", closeGuide);
 
 if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 start();
