@@ -38,6 +38,8 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;
 h1{font-size:20px;margin:0;letter-spacing:.02em}
 .titlerow{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px}
 .guide-link{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--accent);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.subrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.subrow .sub{min-width:0}
 .imglink{margin-left:14px;white-space:nowrap}
 .viewer{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.88);overflow:auto;-webkit-overflow-scrolling:touch}
 .viewer img{display:block;width:100%;max-width:720px;height:auto;margin:0 auto;padding:52px 0 24px}
@@ -104,7 +106,7 @@ li.done .ttl{color:var(--done);text-decoration:line-through}
       <h1 id="title">チェンマイ持ち物リスト</h1>
       <a class="guide-link" id="guideLink" href="guide.jpg">チェンマイ初めてガイド</a>
     </div>
-    <div class="sub">Chiangmai Thailand by UTMB 2026・大和練</div>
+    <div class="subrow"><span class="sub">Chiangmai Thailand by UTMB 2026・大和練</span><a class="guide-link" href="races.html">レース情報 →</a></div>
     <div class="progress"><div class="bar"><i id="bar"></i></div><div class="count" id="count">– / –</div></div>
     <div class="controls" id="races"></div>
     <div class="controls">

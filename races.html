@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>チェンマイ レース情報</title>
+<meta name="description" content="Chiangmai Thailand by UTMB 2026 CHIANG DAO 160 / ELEPHANT 100 / HMONG 50-DAY のスケジュール・関門・map・GPX">
+<meta name="theme-color" content="#1f5a46">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{
+  --bg:#f5f1e8; --card:#fffdf8; --ink:#22201c; --sub:#6d675e; --line:#e3dccd;
+  --accent:#1f5a46; --accent-soft:#dcebe3; --gold:#b8862b; --gold-soft:#f5e7c8;
+  --cut:#b3261e; --cut-soft:#f8e1de;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181a; --card:#1f2224; --ink:#ece8df; --sub:#a39d92; --line:#33373a;
+    --accent:#6fc39e; --accent-soft:#1f3a2f; --gold:#e0b357; --gold-soft:#3a3020;
+    --cut:#f2a097; --cut-soft:#3d2321;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181a; --card:#1f2224; --ink:#ece8df; --sub:#a39d92; --line:#33373a;
+  --accent:#6fc39e; --accent-soft:#1f3a2f; --gold:#e0b357; --gold-soft:#3a3020;
+  --cut:#f2a097; --cut-soft:#3d2321;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;
+  font-size:16px;line-height:1.55}
+a{color:var(--accent)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 80px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;border-bottom:1px solid var(--line)}
+h1{font-size:20px;margin:0;letter-spacing:.02em}
+.titlerow{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px}
+.back{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--accent);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.sub{color:var(--sub);font-size:13px}
+.chiprow{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.chiprow::-webkit-scrollbar{display:none}
+.chip{flex:none;white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;
+  padding:6px 12px;font-size:13px;cursor:pointer;text-decoration:none;display:inline-block}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{color:#10261d}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#10261d}}
+section{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+h2{font-size:16px;margin:0;padding:12px 14px 4px}
+.pad{padding:4px 14px 14px}
+.tl{list-style:none;margin:0;padding:0 14px 10px}
+.tl li{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:14px;align-items:baseline}
+.tl li:first-child{border-top:none}
+.tl .when{flex:none;width:7.6em;font-weight:700;font-variant-numeric:tabular-nums}
+.tl .ev{flex:1;min-width:0}
+.tl li.mine{background:var(--accent-soft);margin:0 -14px;padding:8px 14px}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:4px;padding:0 5px;margin-right:4px;vertical-align:1px}
+.tag.go{background:var(--accent);color:#fff}
+.tag.cut{background:var(--cut);color:#fff}
+:root[data-theme="dark"] .tag{color:#16181a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tag{color:#16181a}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 14px 4px}
+.stat{background:var(--bg);border-radius:10px;padding:8px 10px}
+.stat b{display:block;font-size:18px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--sub)}
+.facts{margin:8px 14px 0;font-size:14px}
+.facts div{display:flex;gap:10px;padding:3px 0}
+.facts dt{flex:none;width:5.5em;color:var(--sub)}
+.facts dd{margin:0;flex:1;min-width:0}
+.btns{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px 14px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--accent);color:var(--accent);background:none;
+  border-radius:10px;padding:8px 12px;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer}
+.btn.primary{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#10261d}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{color:#10261d}}
+.mapthumb{display:block;margin:0 14px;border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:zoom-in;background:#fff}
+.mapthumb img{display:block;width:100%;height:auto}
+.hint{font-size:12px;color:var(--sub);padding:6px 14px 0}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(--line);margin-top:8px}
+table{border-collapse:collapse;font-size:13px;min-width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-size:11px;color:var(--sub);font-weight:600;background:var(--card);position:sticky;top:0}
+th:first-child,td:first-child{position:sticky;left:0;background:var(--card);text-align:left;z-index:1;box-shadow:1px 0 0 var(--line)}
+td:first-child{min-width:8em;max-width:8.5em;white-space:normal;line-height:1.25;font-size:12px}
+td:first-child small{display:block;color:var(--sub);font-size:11px}
+.cp{display:block;font-size:11px;font-weight:700;color:var(--gold)}
+td.cut{color:var(--cut);font-weight:700;background:var(--cut-soft)}
+td.svc{text-align:left;font-size:11px;color:var(--sub)}
+.svc i{font-style:normal;display:inline-block;border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-right:3px}
+.svc i.d{border-color:var(--gold);color:var(--gold);font-weight:700}
+.legend{font-size:12px;color:var(--sub);padding:8px 14px 12px}
+.footer{margin-top:22px;color:var(--sub);font-size:12px;text-align:center}
+.viewer{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.88);overflow:auto;-webkit-overflow-scrolling:touch}
+.viewer img{display:block;width:auto;max-width:none;max-height:100vh;margin:0;padding:52px 12px 24px}
+.viewer .vhint{position:fixed;top:16px;left:12px;color:#ddd;font-size:12px}
+.viewer button{position:fixed;top:10px;right:12px;z-index:31;background:#fff;color:#222;border:none;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="titlerow">
+      <h1>チェンマイ レース情報</h1>
+      <a class="back" href="./">← 持ち物リスト</a>
+    </div>
+    <div class="sub">Chiangmai Thailand by UTMB 2026・時刻はすべてタイ時間（日本 −2時間）</div>
+    <div class="chiprow" id="tabs"></div>
+  </header>
+
+  <section>
+    <h2>3レースのスケジュール</h2>
+    <ul class="tl" id="timeline"></ul>
+  </section>
+
+  <div id="race"></div>
+
+  <div class="footer">
+    出典: 公式サイト chiangmai.utmb.world の各レースページとタイムチャート（2026年10月23日時点）。<br>
+    変更されることがあるので、直前に公式ページも確認してください。
+  </div>
+</div>
+<script>
+// 公式タイムチャート（TIME CHART 2026）から。services: W=水 S=軽食 F=食事 R=休憩 D=ドロップバッグ P=サポーター可, M0=救護なし
+const RACES = [
+  {id:"CHIANG DAO 160", short:"160", km:173, dplus:9800, limit:"48時間",
+   start:"12/4（金）10:00", startAt:"12-04 10:00", finishAt:"12-06 10:00", finish:"12/6（日）10:00",
+   from:"Wat Tham Chiang Dao（チェンダオ）", to:"Chiang Mai PAO Park",
+   map:"maps/chiang_dao_160.png",
+   page:"https://chiangmai.utmb.world/races/CHIANGDAO160",
+   gpx:"https://pdf.utmb.world/raw/upload/v1790325226/thailand/GPX/2026/Chiang_Dao_160_Stations_af5020d931.gpx",
+   chart:"https://img.utmb.world/image/upload/v1791343933/thailand/Time%20chart/TIME%20CHART%202026/Chiang_Dao_100_M_64f3903485.jpg",
+   cps:[
+    ["START","Wat Tham Chiang Dao",0,430,0,"10:00","10:00","","D"],
+    ["A1","Khiri Kiang Dao Garden Home",9,450,230,"10:36","11:22","","W"],
+    ["A2","Ban Mae Mae School",23,750,1350,"12:08","14:33","","SP"],
+    ["A3","Pagia Highland Research Station",33,1560,2380,"13:18","17:19","4日 19:00","WF"],
+    ["A4","Meena Homestay Huay Kub Kab",43,1080,2780,"14:20","19:46","","S"],
+    ["A5","Suanta Sobkai Homestay",51,530,3000,"15:07","21:42","4日 23:00","WFRDP"],
+    ["A6","Doi Mon Ngo",65,1250,4190,"17:02","01:39","","S"],
+    ["A7","Mae Taeng Watershed Research Station",72,710,4340,"17:49","03:15","5日 04:00","WFRP"],
+    ["A8","Pha Taek Village",82,670,4830,"19:08","06:09","","S"],
+    ["A9","Wat Phraphutthabat Si Roi",92,1050,5530,"20:30","09:19","","WFRP"],
+    ["A10","Mae Ka Piang Village",100,740,5910,"21:45","11:45","5日 12:30","S"],
+    ["A11","Wat Pang Hai",110,860,6510,"22:48","14:40","5日 16:30","WFRDP"],
+    ["A12","Monjam",115,1280,7060,"23:40","16:45","","S"],
+    ["A13","Maesa Elephant Camp",130,520,7550,"01:21","20:46","5日 23:30","WFRP"],
+    ["A14","Chao Pho Luang Upatham 7 School",139,1010,8370,"02:50","00:16","","S"],
+    ["A15","Wat Doi Pui",149,1380,9240,"04:25","03:48","","WF M0"],
+    ["A16","Montha Than Waterfall",162,680,9640,"06:05","07:28","6日 07:30","S"],
+    ["FINISH","Chiang Mai PAO Park",173,320,9840,"07:15","10:00","6日 10:00","WFRD"]]},
+  {id:"ELEPHANT 100", short:"100", km:101, dplus:5500, limit:"28時間",
+   start:"12/4（金）8:00", startAt:"12-04 08:00", finishAt:"12-05 12:00", finish:"12/5（土）12:00",
+   from:"Wat Nong Bua Noi", to:"Chiang Mai PAO Park",
+   map:"maps/elephant_100.png",
+   page:"https://chiangmai.utmb.world/races/ELEPHANT100",
+   gpx:"https://pdf.utmb.world/raw/upload/v1790325225/thailand/GPX/2026/Elephant_100_Stations_ddf2a67ffb.gpx",
+   chart:"https://img.utmb.world/image/upload/v1791343933/thailand/Time%20chart/TIME%20CHART%202026/ELEPHANT_100_K_7fb0e67232.jpg",
+   cps:[
+    ["START","Wat Nong Bua Noi",0,710,0,"08:00","08:20","","D"],
+    ["A18","Wat Ban Iek",9,670,380,"08:32","09:56","","W"],
+    ["A9","Wat Phraphutthabat Si Roi",20,1060,1180,"09:26","12:47","","WFRP"],
+    ["A10","Mae Ka Piang Village",28,730,1560,"10:08","15:01","4日 16:00","S"],
+    ["A11","Wat Pang Hai",38,860,2160,"11:00","17:37","4日 19:30","WFRP"],
+    ["A12","Monjam",43,1280,2710,"11:37","19:28","","S"],
+    ["A13","Mae Sa Elephant Camp",58,520,3200,"12:50","22:54","5日 01:30","WFRDP"],
+    ["A14","Chao Pho Luang Upatham 7 School",67,1020,4020,"13:57","02:19","","S"],
+    ["A15","Wat Doi Pui",77,1370,4890,"15:09","06:00","","WF"],
+    ["A16","Montha Than Waterfall",90,1350,5290,"16:30","09:43","5日 09:30","S"],
+    ["FINISH","Chiang Mai PAO Park",101,320,5490,"17:30","12:00","5日 12:00","WFRD"]]},
+  {id:"HMONG 50-DAY", short:"50", km:63, dplus:3000, limit:"16時間30分",
+   start:"12/5（土）6:00", startAt:"12-05 06:00", finishAt:"12-05 22:30", finish:"12/5（土）22:30",
+   from:"Chiang Mai PAO Park", to:"Chiang Mai PAO Park（周回）",
+   map:"maps/hmong_50_day.png",
+   page:"https://chiangmai.utmb.world/races/HMONG50-DAY",
+   gpx:"https://pdf.utmb.world/raw/upload/v1790325222/thailand/GPX/2026/Hmong_50_Stations_05756d913e.gpx",
+   chart:"https://img.utmb.world/image/upload/v1791343933/thailand/Time%20chart/TIME%20CHART%202026/Hmong_50k_day_f06178f11e.jpg",
+   cps:[
+    ["START","Chiang Mai PAO Park",0,320,0,"06:00","06:30","","D"],
+    ["A17","King Kong Landmark",9,1350,170,"06:22","07:53","","W"],
+    ["A13","Maesa Elephant Camp",19,1150,660,"06:59","10:20","5日 11:00","WF"],
+    ["A14","Chao Pho Luang Upatham 7 School",29,1020,1490,"07:48","13:22","5日 14:00","S"],
+    ["A15","Wat Doi Pui",39,1370,2340,"08:43","16:40","","WF"],
+    ["A16","Montha Than Waterfall",52,1350,2740,"09:44","20:26","5日 20:00","S"],
+    ["FINISH","Chiang Mai PAO Park",63,320,2950,"10:30","22:30","5日 22:30","WFD"]]}
+];
+const SVC = {W:"水", S:"軽食", F:"食事", R:"休憩", D:"ドロップ", P:"サポート"};
+
+// 持ち物リストで選んだ種目を最初に開く（同じサイトの保存を読むだけ）
+const LS = "cmutmb-races-v1";
+let sel = "";
+try{ sel = localStorage.getItem(LS) || (JSON.parse(localStorage.getItem("cmutmb-packing-v1") || "{}").race || ""); }catch(e){}
+if(!RACES.some(r => r.id === sel)) sel = RACES[0].id;
+try{ const t = JSON.parse(localStorage.getItem("cmutmb-packing-v1") || "{}").theme; if(t) document.documentElement.dataset.theme = t; }catch(e){}
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function timeline(){
+  const ev = [];
+  RACES.forEach(r => {
+    ev.push({at:r.startAt, when:r.start, race:r.id, kind:"go", text:`${r.id} スタート`, sub:r.from});
+    ev.push({at:r.finishAt, when:r.finish, race:r.id, kind:"cut", text:`${r.id} 制限時間（${r.limit}）`, sub:r.to.replace(/（.*/, "")});
+  });
+  ev.sort((a, b) => a.at.localeCompare(b.at));
+  document.getElementById("timeline").innerHTML = ev.map(e =>
+    `<li class="${e.race === sel ? "mine" : ""}"><span class="when">${esc(e.when.replace(/（(.)）/, "($1)"))}</span>` +
+    `<span class="ev"><span class="tag ${e.kind}">${e.kind === "go" ? "START" : "制限"}</span>${esc(e.text)}<div class="sub">${esc(e.sub)}</div></span></li>`).join("");
+}
+
+function race(){
+  const r = RACES.find(x => x.id === sel);
+  const rows = r.cps.map(([cp, name, km, alt, dp, fast, slow, cut, svc]) =>
+    `<tr><td><span class="cp">${esc(cp)}</span>${esc(name)}</td><td>${km}</td><td class="${cut ? "cut" : ""}">${esc(cut || "")}</td>` +
+    `<td>${slow}</td><td>${fast}</td><td>${alt}</td><td>${dp}</td>` +
+    `<td class="svc">${svc.split(" ")[0].split("").map(c => `<i class="${c === "D" ? "d" : ""}">${SVC[c]}</i>`).join("")}${svc.includes("M0") ? "（救護なし）" : ""}</td></tr>`).join("");
+  document.getElementById("race").innerHTML = `
+  <section>
+    <h2>${esc(r.id)}</h2>
+    <div class="stats">
+      <div class="stat"><b>${r.km}km</b><span>距離</span></div>
+      <div class="stat"><b>${r.dplus.toLocaleString()}m</b><span>累積標高 D+</span></div>
+      <div class="stat"><b>${esc(r.limit.replace("時間", "h").replace("30分", "30"))}</b><span>制限時間</span></div>
+    </div>
+    <dl class="facts">
+      <div><dt>スタート</dt><dd><b>${esc(r.start)}</b><br>${esc(r.from)}</dd></div>
+      <div><dt>ゴール</dt><dd>${esc(r.to)}<br><span class="sub">制限 ${esc(r.finish)}</span></dd></div>
+    </dl>
+    <div class="btns">
+      <a class="btn primary" href="${esc(r.gpx)}" download>GPX をダウンロード</a>
+      <a class="btn" href="${esc(r.page)}" target="_blank" rel="noopener">公式ページ</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>map（高低図・エイド）</h2>
+    <a class="mapthumb" href="${esc(r.map)}" id="mapLink"><img src="${esc(r.map)}" alt="${esc(r.id)} map" loading="lazy"></a>
+    <div class="hint" style="padding-bottom:12px">タップで大きく表示（横にスクロール）</div>
+  </section>
+
+  <section>
+    <h2>エイドと関門</h2>
+    <div class="hint">表は横にスクロールできます。最速・最遅は公式の通過予想、赤は関門（この時刻までに出発）。</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>地点</th><th>km</th><th>関門</th><th>最遅</th><th>最速</th><th>標高m</th><th>D+累積</th><th>サービス</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+    <div class="legend">トイレ・救護は（記載がなければ）全エイドにあります。<b>ドロップ</b>＝預けた荷物を受け取れる所。
+      <a href="${esc(r.chart)}" target="_blank" rel="noopener">公式タイムチャート（画像）</a></div>
+  </section>`;
+  document.getElementById("mapLink").onclick = e => { e.preventDefault(); openViewer(r.map, r.id + " map"); };
+}
+
+function render(){
+  document.getElementById("tabs").innerHTML = RACES.map(r =>
+    `<button class="chip" data-id="${esc(r.id)}" aria-pressed="${r.id === sel}">${esc(r.id)}</button>`).join("");
+  document.querySelectorAll("#tabs [data-id]").forEach(b => b.onclick = () => {
+    sel = b.dataset.id; try{ localStorage.setItem(LS, sel); }catch(e){} render();
+  });
+  timeline(); race();
+}
+
+// map の全画面表示（閉じるボタン・背景タップ・戻るで閉じる）
+function closeViewer(){ const v = document.querySelector(".viewer"); if(v){ v.remove(); document.body.style.overflow = ""; } }
+function openViewer(src, alt){
+  closeViewer();
+  const v = document.createElement("div"); v.className = "viewer";
+  v.innerHTML = `<button type="button">閉じる ✕</button><span class="vhint">${esc(alt)}・横にスクロール →</span><img src="${esc(src)}" alt="${esc(alt)}">`;
+  v.onclick = ev => { if(ev.target !== v.querySelector("img")) history.back(); };
+  document.body.appendChild(v); document.body.style.overflow = "hidden";
+  history.pushState({viewer:1}, "");
+}
+window.addEventListener("popstate", closeViewer);
+
+render();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
