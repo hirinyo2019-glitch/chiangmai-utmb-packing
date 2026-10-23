@@ -53,6 +53,10 @@ h1{font-size:20px;margin:0;letter-spacing:.02em}
 .chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;
   padding:6px 12px;font-size:13px;cursor:pointer}
 a.chip{text-decoration:none;display:inline-block}
+.chiprow{display:flex;gap:6px;width:100%;overflow-x:auto;scrollbar-width:none;align-items:center}
+.chiprow::-webkit-scrollbar{display:none}
+.chiprow .chip{flex:none;white-space:nowrap}
+.rowlabel{flex:none;font-size:12px;color:var(--sub);margin-right:2px}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 :root[data-theme="dark"] .chip[aria-pressed="true"]{color:#10261d}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#10261d}}
@@ -234,15 +238,16 @@ function render(){
   // 種目の選択
   const rs = allRaces();
   const rc = document.getElementById("races");
-  rc.innerHTML = `<div class="label">自分の種目（必携品の表示が絞られます）</div>` +
+  // ボタンは1行に並べ、入りきらなければ横にスワイプ
+  rc.innerHTML = `<div class="label">自分の種目（必携品の表示が絞られます）</div><div class="chiprow">` +
     [["","すべて"], ...rs.map(r => [r, r])].map(([v,l]) =>
-      `<button class="chip" data-race="${esc(v)}" aria-pressed="${state.race===v}">${esc(l)}</button>`).join("");
+      `<button class="chip" data-race="${esc(v)}" aria-pressed="${state.race===v}">${esc(l)}</button>`).join("") + `</div>`;
   rc.querySelectorAll("[data-race]").forEach(b => b.onclick = () => { state.race = b.dataset.race; save(); render(); });
   // 種目ごとのコース map（選んだ種目があればその map だけ）
   const maps = Object.keys(MAPS).filter(r => rs.includes(r) && (!state.race || state.race === r));
   if(maps.length){
-    rc.insertAdjacentHTML("beforeend", `<div class="label">map（コースの高低図・エイド）</div>` +
-      maps.map(r => `<a class="chip" href="${esc(MAPS[r])}" data-map>${esc(r)}</a>`).join(""));
+    rc.insertAdjacentHTML("beforeend", `<div class="chiprow"><span class="rowlabel">map</span>` +
+      maps.map(r => `<a class="chip" href="${esc(MAPS[r])}" data-map>${esc(r)}</a>`).join("") + `</div>`);
     rc.querySelectorAll("[data-map]").forEach(a => a.onclick = e => {
       e.preventDefault(); openGuide(a.getAttribute("href"), a.textContent + " map", true);
     });
