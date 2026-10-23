@@ -43,8 +43,6 @@ h1{font-size:20px;margin:0;letter-spacing:.02em}
 .imglink{margin-left:14px;white-space:nowrap}
 .viewer{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.88);overflow:auto;-webkit-overflow-scrolling:touch}
 .viewer img{display:block;width:100%;max-width:720px;height:auto;margin:0 auto;padding:52px 0 24px}
-.viewer.wide img{width:auto;max-width:none;max-height:100vh;margin:0;padding:52px 12px 24px}
-.viewer .hint{position:fixed;top:16px;left:12px;color:#ddd;font-size:12px}
 .viewer button{position:fixed;top:10px;right:12px;z-index:31;background:#fff;color:#222;border:none;border-radius:999px;padding:7px 14px;font-size:14px;font-weight:600;cursor:pointer}
 .sub{color:var(--sub);font-size:13px}
 .progress{display:flex;align-items:center;gap:10px;margin-top:8px}
@@ -58,7 +56,6 @@ a.chip{text-decoration:none;display:inline-block}
 .chiprow{display:flex;gap:6px;width:100%;overflow-x:auto;scrollbar-width:none;align-items:center}
 .chiprow::-webkit-scrollbar{display:none}
 .chiprow .chip{flex:none;white-space:nowrap}
-.rowlabel{flex:none;font-size:12px;color:var(--sub);margin-right:2px}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 :root[data-theme="dark"] .chip[aria-pressed="true"]{color:#10261d}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#10261d}}
@@ -206,8 +203,6 @@ const isUrl = s => /^https?:\/\/\S+$/.test(s);
 // このアプリに置いたイラスト（.jpg）へのリンクは、直前のリンクの横に並べてアプリ内で全画面表示する
 const SITE = "https://hirinyo2019-glitch.github.io/chiangmai-utmb-packing/";
 const isGuideImg = u => u.startsWith(SITE) && /\.jpg$/i.test(u);
-// 種目名（ノート5の「・」の行と同じ表記）→ コースの高低図。横長なので横スクロールで見る
-const MAPS = {"CHIANG DAO 160":"maps/chiang_dao_160.png", "ELEPHANT 100":"maps/elephant_100.png", "HMONG 50-DAY":"maps/hmong_50_day.png"};
 function details(ds){
   let html = "";
   for(let i = 0; i < ds.length; i++){
@@ -245,15 +240,6 @@ function render(){
     [["","すべて"], ...rs.map(r => [r, r])].map(([v,l]) =>
       `<button class="chip" data-race="${esc(v)}" aria-pressed="${state.race===v}">${esc(l)}</button>`).join("") + `</div>`;
   rc.querySelectorAll("[data-race]").forEach(b => b.onclick = () => { state.race = b.dataset.race; save(); render(); });
-  // 種目ごとのコース map（選んだ種目があればその map だけ）
-  const maps = Object.keys(MAPS).filter(r => rs.includes(r) && (!state.race || state.race === r));
-  if(maps.length){
-    rc.insertAdjacentHTML("beforeend", `<div class="chiprow"><span class="rowlabel">map</span>` +
-      maps.map(r => `<a class="chip" href="${esc(MAPS[r])}" data-map>${esc(r)}</a>`).join("") + `</div>`);
-    rc.querySelectorAll("[data-map]").forEach(a => a.onclick = e => {
-      e.preventDefault(); openGuide(a.getAttribute("href"), a.textContent + " map", true);
-    });
-  }
 
   const listEl = document.getElementById("list");
   listEl.className = state.hideDone ? "hide-done" : "";
@@ -427,10 +413,10 @@ showLastBackup();
 
 // ---- チェンマイ初めてガイド（イラストを全画面で表示、閉じるボタン・背景タップ・戻るで閉じる） ----
 function closeGuide(){ const v = document.querySelector(".viewer"); if(v){ v.remove(); document.body.style.overflow = ""; } }
-function openGuide(src, alt, wide){
+function openGuide(src, alt){
   closeGuide();
-  const v = document.createElement("div"); v.className = wide ? "viewer wide" : "viewer";
-  v.innerHTML = `<button type="button">閉じる ✕</button>` + (wide ? `<span class="hint">${esc(alt)}・横にスクロール →</span>` : "") +
+  const v = document.createElement("div"); v.className = "viewer";
+  v.innerHTML = `<button type="button">閉じる ✕</button>` +
     `<img src="${esc(src)}" alt="${esc(alt)}">`;
   v.onclick = ev => { if(ev.target !== v.querySelector("img")) history.back(); };
   document.body.appendChild(v); document.body.style.overflow = "hidden";
