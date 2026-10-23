@@ -185,6 +185,12 @@ const RACES = [
     ["FINISH","Chiang Mai PAO Park",63,320,2950,"10:30","22:30","5日 22:30","WFD"]]}
 ];
 const PLANNER = "https://hirinyo2019-glitch.github.io/trail-race-planner/";
+// 予測アプリに GPX・スタート・関門を渡す（関門は "A3=19:00" の形。日付はアプリが前の関門から順に繰り上げる）
+function plannerUrl(r){
+  const cutoffs = r.cps.filter(c => c[7]).map(c => `${c[0]}=${c[7].split(" ").pop()}`).join(",");
+  const q = new URLSearchParams({gpx:r.gpx, name:`${r.id} 2026`, start:`2026-${r.startAt.replace(" ", "T")}`, cutoffs});
+  return PLANNER + "?" + q.toString();
+}
 const SVC = {W:"水", S:"軽食", F:"食事", R:"休憩", D:"ドロップ", P:"サポート"};
 
 // 持ち物リストで選んだ種目を最初に開く（同じサイトの保存を読むだけ）
@@ -234,10 +240,10 @@ function race(){
 
   <section>
     <h2>Trail Race Planner でタイムを予測</h2>
-    <div class="pad sub" style="font-size:14px">上の GPX を読み込むと、自分のペースで各エイドの通過時刻とゴールタイム、関門までの余裕が出せます。
-      スタートは <b>${esc(r.start.replace(/（.）/, " "))}</b> と入れてください。計算はスマホの中だけで行います（初回の起動に十数秒かかります）。</div>
+    <div class="pad sub" style="font-size:14px">ボタンを押すと、このレースの GPX・スタート時刻（${esc(r.start.replace(/（.）/, " "))}）・エイドの関門が入った状態で開きます。
+      あとは「予測する」を押すだけで、各エイドの通過時刻とゴールタイム、関門までの余裕が出ます。計算はスマホの中だけで行います（初回の起動に十数秒かかります）。</div>
     <div class="btns" style="padding-top:0">
-      <a class="btn primary" href="${PLANNER}" target="_blank" rel="noopener">Trail Race Planner を開く</a>
+      <a class="btn primary" href="${esc(plannerUrl(r))}" target="_blank" rel="noopener">${esc(r.id)} で予測する</a>
     </div>
   </section>
 
