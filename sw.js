@@ -1,6 +1,6 @@
 // 圏外（機内・山の中）でも開けるように、アプリ本体とリストをキャッシュする
 // ネット優先: 電波があれば常に最新のリスト、なければ前回の内容
-const VERSION = "v8";
+const VERSION = "v9";
 const CACHE = "cmutmb-packing-" + VERSION;
 const CORE = ["./", "./index.html", "./races.html", "./list.txt", "./guide.jpg", "./hotel-route.jpg", "./grab-howto.jpg",
   "./maps/chiang_dao_160.png", "./maps/elephant_100.png", "./maps/hmong_50_day.png","./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
