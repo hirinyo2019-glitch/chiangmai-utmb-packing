@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>チェンマイ フライト</title>
+<meta name="description" content="Chiangmai Thailand by UTMB 2026 大和練メンバーの往復フライト一覧と、出発空港・ターミナルの注意">
+<meta name="theme-color" content="#1f5a46">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{
+  --bg:#f5f1e8; --card:#fffdf8; --ink:#22201c; --sub:#6d675e; --line:#e3dccd;
+  --accent:#1f5a46; --accent-soft:#dcebe3; --gold:#b8862b; --gold-soft:#f5e7c8;
+  --cut:#b3261e; --cut-soft:#f8e1de; --race:#7a5aa8; --race-soft:#e9e1f4;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181a; --card:#1f2224; --ink:#ece8df; --sub:#a39d92; --line:#33373a;
+    --accent:#6fc39e; --accent-soft:#1f3a2f; --gold:#e0b357; --gold-soft:#3a3020;
+    --cut:#f2a097; --cut-soft:#3d2321; --race:#b9a0e0; --race-soft:#2e2640;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181a; --card:#1f2224; --ink:#ece8df; --sub:#a39d92; --line:#33373a;
+  --accent:#6fc39e; --accent-soft:#1f3a2f; --gold:#e0b357; --gold-soft:#3a3020;
+  --cut:#f2a097; --cut-soft:#3d2321; --race:#b9a0e0; --race-soft:#2e2640;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic UI",sans-serif;
+  font-size:16px;line-height:1.55}
+a{color:var(--accent)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 0 10px;border-bottom:1px solid var(--line)}
+h1{font-size:20px;margin:0;letter-spacing:.02em}
+.titlerow{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px}
+.back{font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--accent);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.sub{color:var(--sub);font-size:13px}
+.chiprow{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.chiprow::-webkit-scrollbar{display:none}
+.chip{flex:none;white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;
+  padding:6px 12px;font-size:13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{color:#10261d}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .chip[aria-pressed="true"]{color:#10261d}}
+section{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+h2{font-size:16px;margin:0;padding:12px 14px 4px}
+h3{font-size:14px;margin:0;padding:10px 14px 2px;color:var(--sub)}
+.pad{padding:4px 14px 14px;font-size:14px}
+.warn{border:2px solid var(--cut);background:var(--cut-soft)}
+.warn h2{color:var(--cut);font-size:18px}
+.warn ul{margin:4px 0 0;padding-left:1.2em}
+.warn li{margin:4px 0}
+.warn b{color:var(--cut)}
+
+/* 全体図 */
+.gantt{padding:6px 14px 4px}
+.g-row{display:flex;align-items:center;min-height:30px}
+.g-name{flex:none;width:6.2em;font-size:12px;font-weight:700;line-height:1.2;padding-right:6px}
+.g-track{position:relative;flex:1;height:22px;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(100%/7 - 1px),var(--line) calc(100%/7 - 1px),var(--line) calc(100%/7))}
+.g-head .g-track{height:auto;background:none;display:flex}
+.g-head .g-track span{flex:1;font-size:11px;color:var(--sub);text-align:center;line-height:1.2}
+.g-head .g-track span b{display:block;font-size:12px;color:var(--ink)}
+.g-bar{position:absolute;top:4px;height:14px;border-radius:3px}
+.g-bar.fly{background:var(--gold);top:6px;height:10px}
+.g-bar.stay{background:var(--accent-soft);border:1px solid var(--accent)}
+.g-bar.race{background:var(--race);top:5px;height:12px}
+.g-row.dim{opacity:.35}
+.g-legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--sub);padding:6px 14px 12px}
+.g-legend i{display:inline-block;width:18px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
+/* 日ごとの流れ */
+.day{border-top:1px solid var(--line)}
+.day:first-of-type{border-top:none}
+.day-h{display:flex;align-items:baseline;gap:8px;padding:10px 14px 2px;font-weight:700}
+.day-h small{font-weight:400;color:var(--sub);font-size:12px}
+.point{margin:4px 14px 6px;padding:7px 10px;border-left:3px solid var(--gold);background:var(--gold-soft);border-radius:0 8px 8px 0;font-size:13px}
+.point p{margin:2px 0}
+.fl{display:flex;gap:10px;padding:7px 14px;font-size:14px;align-items:baseline}
+.fl .tm{flex:none;width:3.3em;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.fl .bd{flex:1;min-width:0}
+.fl .who{font-weight:700}
+.fl .route{font-variant-numeric:tabular-nums}
+.fl .term{display:block;font-size:12px;color:var(--sub)}
+.fl .term b{color:var(--ink)}
+.fl.dim{opacity:.35}
+.no{display:inline-block;font-size:12px;font-weight:700;border:1px solid var(--accent);color:var(--accent);border-radius:4px;padding:0 5px;margin-right:6px}
+.no.unk{border-color:var(--line);color:var(--sub);font-weight:400}
+.alert{color:var(--cut)}
+
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(--line);margin-top:6px}
+table{border-collapse:collapse;font-size:13px;min-width:100%}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11px;color:var(--sub);font-weight:600}
+td small{display:block;color:var(--sub);font-size:11px}
+.hint{font-size:12px;color:var(--sub);padding:6px 14px 12px}
+.footer{margin-top:22px;color:var(--sub);font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="titlerow">
+      <h1>チェンマイ フライト</h1>
+      <a class="back" href="./">← 持ち物リスト</a>
+    </div>
+    <div class="sub">時刻はそれぞれの空港の現地時間（タイは日本 −2時間、香港は −1時間）。名前を選ぶとその人の便が目立ちます</div>
+    <div class="chiprow" id="tabs"></div>
+  </header>
+
+  <section class="warn">
+    <h2>⚠ 出発は羽田空港です（成田ではありません）</h2>
+    <div class="pad">
+      <ul>
+        <li>行きは<b>大渕さん以外は全員羽田空港（HND）</b>から出ます。<b>成田空港に行かないでください。</b>成田から羽田はおよそ1時間半かかり、間に合いません。</li>
+        <li>成田から出るのは<b>大渕さん（TG643、12/3 11:45 成田発）だけ</b>です。</li>
+        <li><b>12/3（木）0:05・0:20・1:55 発の便は、12/2（水）の夜に羽田へ</b>行きます。日付を1日まちがえないように。終電の時刻も先に確認してください。</li>
+        <li>羽田は便によって<b>ターミナルが違います</b>。石瀬さん（ANA）は<b>第2</b>、井藤さん・タカさん・カナさん・高田さん・大和さんは<b>第3</b>。</li>
+        <li>帰りのタカさん・カナさん（UO854）は<b>成田に着きます</b>（羽田ではありません）。迎え・車の置き場所に注意。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>全体図（12/2〜12/8）</h2>
+    <div class="gantt" id="gantt"></div>
+    <div class="g-legend">
+      <span><i style="background:var(--gold)"></i>移動（飛行機・乗り継ぎ）</span>
+      <span><i style="background:var(--accent-soft);border:1px solid var(--accent)"></i>タイ滞在</span>
+      <span><i style="background:var(--race)"></i>レース（スタート〜制限時間）</span>
+    </div>
+    <div class="hint" style="padding-top:0">横軸はタイ時間。レースは手書きの一覧のとおり（高田さん・大和さん・大渕さん・カナさん＝HMONG 50-DAY、井藤さん・石瀬さん＝100K、タカさん＝100M。大渕さんは 12/6 の CHEDI 20（約20K）にも出ます）。</div>
+  </section>
+
+  <section>
+    <h2>日ごとの流れ</h2>
+    <div id="days"></div>
+  </section>
+
+  <section>
+    <h2>日本の空港・ターミナル</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>空港・ターミナル</th><th>だれが・どの便</th><th>電車の駅</th></tr></thead>
+      <tbody>
+        <tr><td><b>羽田 第3ターミナル</b><small>国際線ターミナル</small></td>
+          <td>行き 高田さん・大和さん TG683／井藤さん TG661／タカさん・カナさん UO629<br>帰り 高田さん・大和さん、井藤さん（TG682 などタイ国際航空）</td>
+          <td>京急「羽田空港第3ターミナル」駅<br>東京モノレール「羽田空港第3ターミナル」駅</td></tr>
+        <tr><td><b>羽田 第2ターミナル</b><small>ANA の国際線</small></td>
+          <td>行き 石瀬さん NH849<br>帰り 石瀬さん NH850</td>
+          <td>京急「羽田空港第1・第2ターミナル」駅（第2ターミナル側）<br>東京モノレール「羽田空港第2ターミナル」駅<br><small>国際線の手続きは国内線と別の場所。案内表示「国際線」に従う。深夜は開いているお店が少ない</small></td></tr>
+        <tr><td><b>成田 第1ターミナル 南ウイング</b><small>タイ国際航空</small></td>
+          <td>行き 大渕さん TG643<br>帰り 大渕さん TG676</td>
+          <td>JR・京成「成田空港」駅</td></tr>
+        <tr><td><b>成田 第2ターミナル</b><small>香港エクスプレス</small></td>
+          <td>帰り タカさん・カナさん UO854（着）</td>
+          <td>JR・京成「空港第2ビル」駅</td></tr>
+      </tbody>
+    </table></div>
+    <div class="hint">ターミナルは変わることがあります。ANA の羽田発着は第2・第3のどちらかで、出発の2日前から ANA の発着案内で確定します。出発前に e チケットと航空会社のアプリで確認してください。<br>
+      海外の空港: バンコク＝スワンナプーム空港（BKK）、香港＝香港国際空港（HKG）、チェンマイ＝チェンマイ国際空港（CNX）。</div>
+  </section>
+
+  <div class="footer">
+    出典: 石瀬さん作のフライト一覧（手書き）。便名・時刻は e チケットが正です。
+  </div>
+</div>
+<script>
+const AP = { HND:{n:"羽田",tz:9}, NRT:{n:"成田",tz:9}, BKK:{n:"バンコク",tz:7}, CNX:{n:"チェンマイ",tz:7}, HKG:{n:"香港",tz:8} };
+const WD = {2:"水",3:"木",4:"金",5:"土",6:"日",7:"月",8:"火"};
+
+// 人（組）ごとの便。day = 12月の日付（出発地の現地日付）、dep/arr = 現地時刻、arrDay = 到着日（違うときだけ）
+// t = 日本側のターミナル（固定文字列、<b> を含む）
+// タカさん・カナさんは同じ便（レースは別）
+const TK_LEGS = [
+      {day:3, no:"UO629", f:"HND", dep:"1:55", to:"HKG", arr:"6:15", t:"羽田 <b>第3ターミナル</b>・12/2 夜に羽田へ"},
+      {day:3, no:"UO756", f:"HKG", dep:"7:40", to:"CNX", arr:"9:50"},
+      {day:7, no:"UO755", f:"CNX", dep:"19:40", to:"HKG", arr:"23:25"},
+      {day:8, no:"UO854", f:"HKG", dep:"2:00", to:"NRT", arr:"6:55", t:"<b class=\"alert\">成田</b> 第2ターミナル 着（羽田ではない）"},
+    ];
+
+const GROUPS = [
+  { id:"takada", name:"高田さん・大和さん", short:"高田・大和", race:{day:5, from:"6:00", to:"22:30", toDay:5, name:"HMONG 50-DAY"},
+    legs:[
+      {day:2, no:"TG683", f:"HND", dep:"10:35", to:"BKK", arr:"15:40", t:"羽田 <b>第3ターミナル</b>"},
+      {day:2, no:"",      f:"BKK", dep:"17:30", to:"CNX", arr:"18:50"},
+      {day:6, no:"",      f:"CNX", dep:"19:35", to:"BKK", arr:"21:00"},
+      {day:6, no:"",      f:"BKK", dep:"23:15", to:"HND", arr:"6:55", arrDay:7, t:"羽田 <b>第3ターミナル</b> 着（タイ国際航空の場合）"},
+    ]},
+  { id:"ishise", name:"石瀬さん", short:"石瀬", race:{day:4, from:"8:00", to:"12:00", toDay:5, name:"100K"},
+    legs:[
+      {day:3, no:"NH849", f:"HND", dep:"0:05", to:"BKK", arr:"5:10", t:"羽田 <b>第2ターミナル</b>（ANA）・12/2 夜に羽田へ"},
+      {day:3, no:"TG102", f:"BKK", dep:"7:25", to:"CNX", arr:"8:45"},
+      {day:6, no:"TG113", f:"CNX", dep:"17:10", to:"BKK", arr:"18:30"},
+      {day:6, no:"NH850", f:"BKK", dep:"22:25", to:"HND", arr:"6:05", arrDay:7, t:"羽田 <b>第2ターミナル</b> 着（ANA）"},
+    ]},
+  { id:"ito", name:"井藤さん", short:"井藤", race:{day:4, from:"8:00", to:"12:00", toDay:5, name:"100K"},
+    legs:[
+      {day:3, no:"TG661", f:"HND", dep:"0:20", to:"BKK", arr:"5:25", t:"羽田 <b>第3ターミナル</b>・12/2 夜に羽田へ"},
+      {day:3, no:"TG102", f:"BKK", dep:"7:25", to:"CNX", arr:"8:45"},
+      {day:6, no:"TG113", f:"CNX", dep:"17:10", to:"BKK", arr:"18:30"},
+      {day:7, no:"TG682", f:"BKK", dep:"23:15", to:"HND", arr:"6:55", arrDay:8, t:"羽田 <b>第3ターミナル</b> 着"},
+    ]},
+  { id:"taka", name:"タカさん", short:"タカ", race:{day:4, from:"10:00", to:"10:00", toDay:6, name:"100M"}, legs: TK_LEGS },
+  { id:"kana", name:"カナさん", short:"カナ", race:{day:5, from:"6:00", to:"22:30", toDay:5, name:"HMONG 50-DAY"}, legs: TK_LEGS },
+  { id:"ofuchi", name:"大渕さん", short:"大渕", race:[{day:5, from:"6:00", to:"22:30", toDay:5, name:"HMONG 50-DAY"}, {day:6, from:"7:30", to:"12:30", toDay:6, name:"CHEDI 20"}],
+    legs:[
+      {day:3, no:"TG643", f:"NRT", dep:"11:45", to:"BKK", arr:"17:05", t:"<b class=\"alert\">成田</b> 第1ターミナル 南ウイング（この人だけ成田発）"},
+      {day:4, no:"TG104", f:"BKK", dep:"10:15", to:"CNX", arr:"11:30"},
+      {day:6, no:"TG113", f:"CNX", dep:"17:10", to:"BKK", arr:"18:30"},
+      {day:7, no:"TG676", f:"BKK", dep:"8:00", to:"NRT", arr:"15:50", t:"<b>成田</b> 第1ターミナル 南ウイング 着"},
+    ]},
+];
+
+// 日ごとのポイント（手で書いた要約）
+const POINTS = {
+  2: ["<b>高田さん・大和さん</b>が先に出発（羽田 10:35）。夜 18:50 にチェンマイ着。",
+      "<b>夜は 12/3 未明の便の人が羽田へ</b>（石瀬さん＝第2、井藤さん・タカさん・カナさん＝第3）。"],
+  3: ["<b>石瀬さん 0:05・井藤さん 0:20</b> はほぼ同じ時刻に羽田を出発（ターミナルは別）。バンコクで同じ <b>TG102</b> に乗り、<b>8:45 に一緒にチェンマイ着</b>。",
+      "その <b>1時間半あと（1:55）にタカさん・カナさん</b>が香港経由で出発。チェンマイ着は 9:50（井藤さん・石瀬さんの約1時間後）。",
+      "<b>大渕さんは昼に成田から</b>（11:45）。この日はバンコク泊。"],
+  4: ["<b>大渕さん</b>が 11:30 にチェンマイ着。これで全員そろう。",
+      "100K（井藤さん・石瀬さん）8:00 スタート、100M（タカさん）10:00 スタート。"],
+  5: ["HMONG 50-DAY（高田さん・大和さん・大渕さん・カナさん）6:00 スタート。"],
+  6: ["<b>大渕さん</b>は朝 7:30 から <b>CHEDI 20</b>（約20K、制限 12:30）。終わったら 17:10 の便へ。",
+      "<b>井藤さん・石瀬さん・大渕さん</b>は同じ <b>TG113（17:10）</b>でバンコクへ。そのあと別々の便。",
+      "高田さん・大和さんは 19:35 発。石瀬さんは 22:25、高田さん・大和さんは 23:15 にバンコクを出て、12/7 朝に羽田着。"],
+  7: ["<b>大渕さん</b>は朝 8:00 バンコク発、15:50 成田着。",
+      "<b>タカさん・カナさん</b>は夜 19:40 にチェンマイを出発（香港経由）。<b>井藤さん</b>はバンコクで1日過ごし 23:15 発。"],
+  8: ["朝 6:55 に<b>井藤さんは羽田</b>、<b>タカさん・カナさんは成田</b>に着いて全員帰国。"],
+};
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const hm = s => { const [h,m] = s.split(":").map(Number); return h + m/60; };
+// タイ時間で 12/2 0:00 からの時間
+const thai = (day, time, tz) => (day - 2) * 24 + hm(time) - (tz - 7);
+const SPAN = 7 * 24;
+
+const KEY = "cmutmb-flight-group";
+let sel = "all";
+try { sel = localStorage.getItem(KEY) || "all"; } catch(e) {}
+if(sel !== "all" && !GROUPS.some(g => g.id === sel)) sel = "all";
+
+function renderTabs(){
+  const tabs = document.getElementById("tabs");
+  const opts = [{id:"all", name:"全員"}, ...GROUPS];
+  tabs.innerHTML = opts.map(o => `<button class="chip" data-id="${o.id}" aria-pressed="${o.id === sel}">${esc(o.name)}</button>`).join("");
+  tabs.querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    sel = b.dataset.id; try { localStorage.setItem(KEY, sel); } catch(e) {}
+    render();
+  });
+}
+
+function bar(cls, a, b, title){
+  const l = Math.max(0, a) / SPAN * 100, w = (Math.min(SPAN, b) - Math.max(0, a)) / SPAN * 100;
+  return `<div class="g-bar ${cls}" style="left:${l}%;width:${Math.max(w, .8)}%" title="${esc(title)}"></div>`;
+}
+
+function renderGantt(){
+  let h = `<div class="g-row g-head"><div class="g-name"></div><div class="g-track">${
+    [2,3,4,5,6,7,8].map(d => `<span><b>12/${d}</b>${WD[d]}</span>`).join("")}</div></div>`;
+  for(const g of GROUPS){
+    const L = g.legs.map(l => ({ a: thai(l.day, l.dep, AP[l.f].tz), b: thai(l.arrDay || l.day, l.arr, AP[l.to].tz), l }));
+    // 到着が出発より前になる（日付またぎ）ときは翌日扱い
+    L.forEach(x => { if(x.b < x.a) x.b += 24; });
+    const firstTh = L.find(x => AP[x.l.to].tz === 7), lastTh = [...L].reverse().find(x => AP[x.l.f].tz === 7);
+    let bars = "";
+    if(firstTh && lastTh) bars += bar("stay", firstTh.b, lastTh.a, "タイ滞在");
+    // 乗り継ぎ待ちが6時間未満なら1本の「移動」にまとめる（バンコク泊などは滞在として見せる）
+    let cur = null;
+    for(const x of L){
+      if(cur && x.a - cur.b < 6) cur.b = x.b;
+      else { if(cur) bars += bar("fly", cur.a, cur.b, "移動"); cur = { a: x.a, b: x.b }; }
+    }
+    if(cur) bars += bar("fly", cur.a, cur.b, "移動");
+    for(const r of [].concat(g.race)) bars += bar("race", thai(r.day, r.from, 7), thai(r.toDay, r.to, 7), r.name);
+    h += `<div class="g-row${sel !== "all" && sel !== g.id ? " dim" : ""}"><div class="g-name">${esc(g.name)}</div><div class="g-track">${bars}</div></div>`;
+  }
+  document.getElementById("gantt").innerHTML = h;
+}
+
+function renderDays(){
+  // 同じ日・同じ便はまとめる（便名がない区間は出発地＋時刻で）
+  const map = new Map();
+  for(const g of GROUPS) for(const l of g.legs){
+    const k = l.day + "|" + (l.no || l.f + l.dep);
+    if(!map.has(k)) map.set(k, { l, who: [], ids: [], terms: [] });
+    const e = map.get(k); e.who.push(g.name); e.ids.push(g.id);
+    if(l.t && !e.terms.includes(l.t)) e.terms.push(l.t);
+  }
+  // 表示は現地時刻なので、日ごとの並びも現地時刻の順
+  const all = [...map.values()].sort((x, y) => x.l.day - y.l.day || hm(x.l.dep) - hm(y.l.dep));
+  let h = "";
+  for(const d of [2,3,4,5,6,7,8]){
+    const items = all.filter(e => e.l.day === d);
+    h += `<div class="day"><div class="day-h">12/${d}（${WD[d]}）<small>${d <= 4 ? "行き" : d >= 6 ? "帰り" : "レース"}</small></div>`;
+    if(POINTS[d]) h += `<div class="point">${POINTS[d].map(p => `<p>${p}</p>`).join("")}</div>`;
+    for(const e of items){
+      const l = e.l;
+      const no = l.no ? `<span class="no">${esc(l.no)}</span>` : `<span class="no unk">便名?</span>`;
+      const next = l.arrDay && l.arrDay !== l.day ? `（12/${l.arrDay} 着）` : (hm(l.arr) < hm(l.dep) ? "（翌日着）" : "");
+      const dim = sel !== "all" && !e.ids.includes(sel);
+      const terms = e.terms;
+      h += `<div class="fl${dim ? " dim" : ""}"><div class="tm">${esc(l.dep)}</div><div class="bd">
+        <span class="who">${esc(e.who.join("・"))}</span><br>${no}<span class="route">${esc(AP[l.f].n)} ${esc(l.dep)} → ${esc(AP[l.to].n)} ${esc(l.arr)}${next}</span>
+        ${terms.map(t => `<span class="term">${t}</span>`).join("")}</div></div>`;
+    }
+    h += `</div>`;
+  }
+  document.getElementById("days").innerHTML = h;
+}
+
+function render(){ renderTabs(); renderGantt(); renderDays(); }
+render();
+if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>
